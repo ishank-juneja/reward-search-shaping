@@ -1,40 +1,55 @@
-from random import randint
+# Declare constants
+pro_fit = 0.01
+fat_fit = 0.01
+both_fit = 1
+none_fit = 0
 
 
-# Class to implement windy-gridworld problem set-up
-class WindyGridWorld:
-    # Constructor to init grid world parameters
-    def __init__(self, shape, start, goal, wind, stochastic):
+# Class to implement balanced diet problem environment
+# Environment provides "Fitness" instead of the usual rewards
+class World:
+    # Constructor to init environment parameters
+    def __init__(self, shape, born, fat, protein):
         # Read in size of grid world as a tuple
         self.shape = shape
-        # Read in default born/start state
-        self.start = start
-        # Read in goal state
-        self.goal = goal
-        # Read in the wind strenth for each col
-        self.wind = wind
-        # Reset current state to start
+        # Read in born/start state
+        self.start = born
+        # Satiated in Fat ?
+        self.fat_sat = False
+        # Satiated in Protein ?
+        self.pro_sat = False
+        # Read in Fat location
+        self.fat_loc = fat
+        # Read in Protein location
+        self.pro_loc = protein
+        # Reset current position to start
         self.cur_row = self.start[0]
         self.cur_col = self.start[1]
-        self.stochastic = stochastic
 
+    # Reset state in which object ois
     def reset(self):
-        # Reset current state to start
+        # Reset current state to default start/born
         self.cur_row = self.start[0]
         self.cur_col = self.start[1]
+        # Satiated in Fat ?
+        self.fat_sat = False
+        # Satiated in Protein
+        self.pro_sat = False
         return
 
     # Action number vs outcome mapping
-    # 0 = N, 1 = S, 2 = E, 3 = W
-    # 4 = NE, 5 = SE, 6 = SW, 7 = NW
-    def update_state(self, action):
-        # Shift upward as per wind strength for current column
-        # Wind can only push up in this problem
-        cur_wind = self.wind[self.cur_col]
-        if self.stochastic:
-            cur_wind += randint(-1, 1)
-        # Fixed negative reward for every step
-        rew = -1
+    # 0 = N, 1 = S, 2 = E, 3 = W, 4 = Eat
+    def update_state(self, action, rand_fat, rand_pro):
+        # Change satiatedness based on random event occurred
+        # if random() < 0.2:
+        #     self.fat_sat = False
+        # if random() < 0.2:
+        if rand_fat:
+            self.fat_sat = False
+        if rand_pro:
+            self.pro_sat = False
+        # Else do nothing
+
         if action == 0:
             # Up
             self.cur_row += 1
@@ -48,28 +63,31 @@ class WindyGridWorld:
             # Left
             self.cur_col += -1
         elif action == 4:
-            self.cur_row += 1
-            self.cur_col += 1
-        elif action == 5:
-            self.cur_row += -1
-            self.cur_col += 1
-        elif action == 6:
-            self.cur_row += -1
-            self.cur_col += -1
-        elif action == 7:
-            self.cur_row += 1
-            self.cur_col += -1
-        elif action == 8:
-            # No update in row/col
-            self.cur_row = self.cur_row
+            # Eat action, don't move, update satiatedness of on food location
+            if (self.cur_row, self.cur_col) == self.fat_loc:
+                self.fat_sat = True
+            elif (self.cur_row, self.cur_col) == self.pro_loc:
+                self.pro_sat = True
+            # Else do nothing
         else:
-            print("Incorrect action, aborting")
+            print("Incorrect action {0} encountered, aborting".format(action))
             exit(0)
-        # Add effect of wind
-        self.cur_row = max(min(self.cur_row + cur_wind, self.shape[0] - 1), 0)
+        # Clip the effect of actions to within the grid limits
+        self.cur_row = max(min(self.cur_row, self.shape[0] - 1), 0)
         self.cur_col = max(min(self.cur_col, self.shape[1] - 1), 0)
-        # Episode ended
-        if self.cur_row == self.goal[0] and self.cur_col == self.goal[1]:
-            rew = 0
-        # Return reward and new state to main
-        return rew, (self.cur_row, self.cur_col)
+        # Fitness increment based on constants defined above
+        # Encode satiated state for return
+        if self.pro_sat and self.fat_sat:
+            fit_incr = both_fit
+            sat_state = 3
+        elif self.pro_sat:
+            fit_incr = pro_fit
+            sat_state = 2
+        elif self.fat_sat:
+            fit_incr = fat_fit
+            sat_state = 1
+        else:
+            fit_incr = none_fit
+            sat_state = 0
+        # Return fitness increment based on Satiatedness and also return next state to agent
+        return fit_incr, (self.cur_row, self.cur_col, sat_state)
