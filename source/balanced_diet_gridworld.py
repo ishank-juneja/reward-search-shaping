@@ -1,8 +1,4 @@
-# Declare constants
-pro_fit = 0.01
-fat_fit = 0.01
-both_fit = 1
-none_fit = 0
+from constants import *
 
 
 # Class to implement balanced diet problem environment
