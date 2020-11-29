@@ -6,12 +6,12 @@ Some of the environments and policies considered in this paper-
 
 <p align="center">
   <br>
-  <img src="media/worlds.png" alt="nixie clock" height='250'/>
+  <img src="media/worlds.png" alt="regular" height='250'/>
 </p>
 
 <p align="center">
   <br>
-  <img src="media/policies.png" alt="nixie clock" height='300'/>
+  <img src="media/policies.png" alt="walls" height='300'/>
 </p>
 
 ### Instructions to run the scripts

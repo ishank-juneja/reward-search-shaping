@@ -4,4 +4,4 @@
 *.tex
 *.sty
 *.png
-!media
+!media/*.png
