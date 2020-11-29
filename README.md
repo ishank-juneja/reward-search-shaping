@@ -2,6 +2,10 @@
 
 The PDF report for the project is available on [this link](https://ishank-juneja.github.io/assets/docs/reward-shaping-report.pdf).
 
+### Related Projects
+
+Another related project that I have worked on in this space is on [Expert Guided PAC exploration](https://github.com/ishank-juneja/expert-guided-PACexploration)
+
 Some of the environments and policies considered in this paper-
 
 <p align="center">
