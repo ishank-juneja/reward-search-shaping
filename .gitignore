@@ -5,3 +5,6 @@
 *.sty
 *.png
 !media/*.png
+references
+results
+proposal
