@@ -1,6 +1,6 @@
 # Reward Search and Reward Shaping in Reinforcement Learning
 
-The PDF report for the project is available on [this link]({{site.baseurl}}/assets/docs/reward-shaping-report.pdf).
+The PDF report for the project is available on [this link](https://ishank-juneja.github.io/assets/docs/reward-shaping-report.pdf).
 
 Some of the environments and policies considered in this paper-
 
